@@ -1,0 +1,19 @@
+version: '3.5'
+services:
+  db:
+    image: mysql:8.0.31
+    restart: always
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - ./db:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=rinhadb
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=pass
+      - MYSQL_ROOT_PASSWORD=pass
+
+volumes:
+  db:
