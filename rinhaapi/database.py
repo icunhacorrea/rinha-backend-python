@@ -23,4 +23,3 @@ def create_db_and_tables():
 
 def get_session():
     return Session(engine)
-

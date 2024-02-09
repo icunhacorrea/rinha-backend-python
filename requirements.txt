@@ -2,3 +2,4 @@ uvicorn[standart]
 fastapi==0.109.0
 sqlmodel==0.0.14
 mysql-connector-python==8.3.0
+redis[hiredis]

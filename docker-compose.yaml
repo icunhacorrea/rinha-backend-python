@@ -1,8 +1,25 @@
 version: '3.5'
 services:
+
+  nginx: # Load Balancer
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api1
+    ports:
+      - "9999:9999"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: '0.5GB'
+
   db:
     image: mysql:8.0.31
     restart: always
+    container_name: rinhadb
+    hostname: mysql
     ports:
       - '3306:3306'
     expose:
@@ -14,6 +31,48 @@ services:
       - MYSQL_USER=admin
       - MYSQL_PASSWORD=pass
       - MYSQL_ROOT_PASSWORD=pass
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75GB'
+          memory: '1.5GB'
+
+  api1:
+    image: rinhaapi
+    container_name: rinha-api1
+    hostname: api1
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - db
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25GB'
+          memory: '0.5GB'
+
+  api2:
+    image: rinhaapi
+    container_name: rinha-api2
+    hostname: api2
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - db
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25GB'
+          memory: '0.5GB'
+
+  redis:
+    image: redis:latest
+    restart: always
+    hostname: redis
+    ports:
+      - '6379:6379'
 
 volumes:
   db:
